@@ -1,0 +1,17 @@
+{
+    "name": "llm-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "dev": "fastapi dev app/main.py",
+        "start": "fastapi run app/main.py",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "update-client": "openapi-generator-cli generate -g python -i http://localhost:8000/openapi.json -o ./client"
+    },
+    "author": "Jean-François Arbour",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "@openapitools/openapi-generator-cli": "^2.13.4"
+    }
+}
