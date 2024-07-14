@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 from functools import lru_cache
 from dataclasses import dataclass
@@ -5,6 +6,8 @@ from fastapi import APIRouter, Depends, File
 from ..internal import transcribe
 from ..config import get_settings, Settings
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     tags=["audio"],
@@ -22,11 +25,16 @@ class TranscriptionResponse:
 
 
 @router.post("/transcribe/", response_model=TranscriptionResponse)
-def handle_transcribe(data: Annotated[bytes, File()], settings: Annotated[Settings, Depends(get_settings)]):
+def handle_transcribe(
+        data: Annotated[bytes, File(media_type="audio/wav")],
+        settings: Annotated[Settings, Depends(get_settings)]
+):
     """Transcribe audio data into text.
 
     The payload should be a WAV file.
     """
+    logger.info("Received audio transcription request")
+
     api_key = settings.audio.deepgram_api_key
     response = transcribe.deepgram(data, api_key=api_key)
 
